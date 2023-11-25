@@ -17,10 +17,10 @@ EyeSpy Password Input is an interactive web component that takes security and us
 2. Open the `index.html` file in your favorite web browser..
 3. Experience the EyeSpy Password Input component and be amazed by its interactive features!
 
-## Usage
+## Contributions
 
 Contributions are welcome! If you have ideas for improvements or new features, feel free to open an issue or submit a pull request.
 
-## Contributions
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
