@@ -13,7 +13,7 @@ EyeSpy Password Input is an interactive web component that takes security and us
 
 1. Clone this repository to your local machine.
    ```bash
-   git clone https://github.com/yourusername/eyespy-password-input.git
+   git clone https://github.com/JuanGr95/eyespy-password-input.git
 2. Open the `index.html` file in your favorite web browser..
 3. Experience the EyeSpy Password Input component and be amazed by its interactive features!
 
