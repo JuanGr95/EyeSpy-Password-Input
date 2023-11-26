@@ -1,0 +1,79 @@
+:root {
+    --color: #778da9;
+    --selection: #1b263b;
+    --color-bg: #0d1b2a;
+    --color-bg-hv: #1b263b;
+}
+
+body {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #0a0908;
+    font-family: 'Courier New', monospace;
+}
+
+.contenedor {
+    position: relative;
+}
+
+label {
+    position: absolute;
+    color: var(--color);
+    bottom: calc(100% + 0.5rem);
+    letter-spacing: 0.2ch;
+    transition: color 0.2s;
+}
+
+input {
+    border: 2px solid var(--color);
+    border-radius: 6px;
+    font-family: 'Courier New', monospace;
+    font-size: 1.5rem;
+    padding: 1rem 2rem;
+    padding-right: 4rem;
+    letter-spacing: 0.5rem;
+    color: var(--color);
+    background: var(--color-bg);
+    outline: none;
+    transition: border-color 0.2s, color 0.2s
+}
+
+button {
+    padding: 0;
+    display: grid;
+    place-items: center;
+    height: 100%;
+    aspect-ratio: 1;
+    border-radius: 12px;
+    border: 0;
+    background: none padding-box;
+    ;
+    border: 6px solid transparent;
+    transition: background 0.5s;
+    color: var(--color);
+    position: absolute;
+    right: 0;
+    z-index: 2;
+    top: 50%;
+    cursor: pointer;
+    translate: 0 -50%;
+    outline: 0;
+}
+
+input::selection {
+    background: var(--selection);
+}
+
+button:is(:focus-visible, :hover) {
+    background: var(--color-bg-hv) padding-box;
+}
+
+.eye-lid {
+    opacity: 1;
+    transform-origin: center center;
+    transition: transform .1s;
+    transition-timing-function: ease-in;
+}
