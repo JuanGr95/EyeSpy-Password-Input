@@ -1,10 +1,13 @@
 
-const svgContainer = document.getElementById('svgContainer');
-const circuloInterno = document.getElementById('circuloInterno');
-const circuloExterno = document.getElementById('circuloExterno');
-const eyeUp = document.getElementById('up');
-const eyeGroup = document.getElementById('eyeGroup');
+const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789`~,.<>?/;":][}{+_)(*&^%$#@!±=-§';
+const svgContainer = document.querySelector('#svgContainer');
+const innerCircle = document.querySelector('#innerCircle');
+const exCircle = document.querySelector('#exCircle');
+const eyeUp = document.querySelector('#up');
+const eyeGroup = document.querySelector('#eyeGroup');
 let stopBlink = false;
+const charStepTime = 15;
+const charStepSize = 10;
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -24,11 +27,6 @@ async function blink() {
 }
 
 blink();
-
-
-const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789`~,.<>?/;":][}{+_)(*&^%$#@!±=-§';
-const charStepTime = 15;
-const charStepSize = 10;
 
 async function revealPassword(passwordInput, passwordValue) {
     let index = 1;
@@ -87,22 +85,22 @@ window.addEventListener('mousemove', (event) => {
     const mouseX = (event.clientX - rect.left) * (svgViewBox.width / rect.width);
     const mouseY = (event.clientY - rect.top) * (svgViewBox.height / rect.height);
 
-    const circuloExternoX = parseFloat(circuloExterno.getAttribute('cx'));
-    const circuloExternoY = parseFloat(circuloExterno.getAttribute('cy'));
+    const exCircleX = parseFloat(exCircle.getAttribute('cx'));
+    const exCircleY = parseFloat(exCircle.getAttribute('cy'));
 
-    const distanciaX = mouseX - circuloExternoX;
-    const distanciaY = mouseY - circuloExternoY;
+    const distanceX = mouseX - exCircleX;
+    const distanceY = mouseY - exCircleY;
 
-    const angulo = Math.atan2(distanciaY, distanciaX);
+    const angle = Math.atan2(distanceY, distanceX);
 
-    const radioExterno = parseFloat(circuloExterno.getAttribute('r'));
-    const radioInterno = parseFloat(circuloInterno.getAttribute('r'));
+    const exRadius = parseFloat(exCircle.getAttribute('r'));
+    const intRadius = parseFloat(innerCircle.getAttribute('r'));
 
-    const nuevoX = circuloExternoX + (radioExterno - radioInterno) * Math.cos(angulo);
-    const nuevoY = circuloExternoY + (radioExterno - radioInterno) * Math.sin(angulo);
+    const newX = exCircleX + (exRadius - intRadius) * Math.cos(angle);
+    const newY = exCircleY + (exRadius - intRadius) * Math.sin(angle);
 
-    circuloInterno.setAttribute('cx', nuevoX);
-    circuloInterno.setAttribute('cy', nuevoY);
+    innerCircle.setAttribute('cx', newX);
+    innerCircle.setAttribute('cy', newY);
 
-    circuloInterno.setAttribute('transform', `rotate(${angulo * (180 / Math.PI)} ${nuevoX} ${nuevoY})`);
+    innerCircle.setAttribute('transform', `rotate(${angle * (180 / Math.PI)} ${newX} ${newY})`);
 });
