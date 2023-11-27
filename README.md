@@ -1,6 +1,7 @@
 # EyeSpy Password Input
 
 EyeSpy Password Input is an interactive web component that takes security and user experience to the next level. It transforms a simple password field into a unique experience with an eye icon that smoothly follows the mouse movement and a special decryption effect when revealing the password.
+
 ![EyeSpy](https://github.com/JuanGr95/EyeSpy-Password-Input/assets/131586834/ba3647f9-3ed8-4606-aa0d-0b7087011bde)
 ## Main Features
 
