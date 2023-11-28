@@ -8,6 +8,11 @@ const eyeGroup = document.querySelector('#eyeGroup');
 let stopBlink = false;
 const charStepTime = 15;
 const charStepSize = 10;
+const svgViewBox = svgContainer.viewBox.baseVal;
+const exRadius = parseFloat(exCircle.getAttribute('r'));
+const intRadius = parseFloat(innerCircle.getAttribute('r'));
+const radiusDiff = exRadius - intRadius;
+const radToDeg = 180 / Math.PI;
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -78,29 +83,27 @@ function togglePasswordVisibility() {
 }
 
 window.addEventListener('mousemove', (event) => {
-    const rect = svgContainer.getBoundingClientRect();
+    if (eyeGroup.getAttribute('mask') == 'url(#eye-open)') {
+        const rect = svgContainer.getBoundingClientRect();
 
-    const svgViewBox = svgContainer.viewBox.baseVal;
+        const mouseX = (event.clientX - rect.left) * (svgViewBox.width / rect.width);
+        const mouseY = (event.clientY - rect.top) * (svgViewBox.height / rect.height);
 
-    const mouseX = (event.clientX - rect.left) * (svgViewBox.width / rect.width);
-    const mouseY = (event.clientY - rect.top) * (svgViewBox.height / rect.height);
+        const exCircleX = parseFloat(exCircle.getAttribute('cx'));
+        const exCircleY = parseFloat(exCircle.getAttribute('cy'));
 
-    const exCircleX = parseFloat(exCircle.getAttribute('cx'));
-    const exCircleY = parseFloat(exCircle.getAttribute('cy'));
+        const distanceX = mouseX - exCircleX;
+        const distanceY = mouseY - exCircleY;
 
-    const distanceX = mouseX - exCircleX;
-    const distanceY = mouseY - exCircleY;
+        const angle = Math.atan2(distanceY, distanceX);
 
-    const angle = Math.atan2(distanceY, distanceX);
+        const newX = exCircleX + radiusDiff * Math.cos(angle);
+        const newY = exCircleY + radiusDiff * Math.sin(angle);
 
-    const exRadius = parseFloat(exCircle.getAttribute('r'));
-    const intRadius = parseFloat(innerCircle.getAttribute('r'));
+        innerCircle.setAttribute('cx', newX);
+        innerCircle.setAttribute('cy', newY);
 
-    const newX = exCircleX + (exRadius - intRadius) * Math.cos(angle);
-    const newY = exCircleY + (exRadius - intRadius) * Math.sin(angle);
-
-    innerCircle.setAttribute('cx', newX);
-    innerCircle.setAttribute('cy', newY);
-
-    innerCircle.setAttribute('transform', `rotate(${angle * (180 / Math.PI)} ${newX} ${newY})`);
+        innerCircle.setAttribute('transform', `rotate(${angle * radToDeg} ${newX} ${newY})`);
+    }
 });
+
