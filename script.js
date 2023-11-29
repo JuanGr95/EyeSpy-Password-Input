@@ -14,6 +14,11 @@ const intRadius = parseFloat(innerCircle.getAttribute('r'));
 const radiusDiff = exRadius - intRadius;
 const radToDeg = 180 / Math.PI;
 
+let timer = null;
+const noLook = 5000;
+
+const noLookEvent = new Event('noLook');
+
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -82,7 +87,7 @@ function togglePasswordVisibility() {
     }
 }
 
-window.addEventListener('mousemove', (event) => {
+function eyeMouseFollow() {
     if (eyeGroup.getAttribute('mask') == 'url(#eye-open)') {
         const rect = svgContainer.getBoundingClientRect();
 
@@ -102,30 +107,25 @@ window.addEventListener('mousemove', (event) => {
 
         innerCircle.setAttribute('cx', newX);
         innerCircle.setAttribute('cy', newY);
-
-        innerCircle.setAttribute('transform', `rotate(${angle * radToDeg} ${newX} ${newY})`);
     }
-});
+}
 
-let timer = null;
-const noLook = 5000; // Tiempo en milisegundos
-
-// Creamos el evento personalizado
-const noLookEvent = new Event('noLook');
-
-window.addEventListener('mousemove', () => {
-    // Reiniciamos el contador cada vez que se detecta un movimiento del ratón
+function eyeDontLook() {
     if (timer !== null) {
         clearTimeout(timer);
     }
 
     timer = setTimeout(() => {
-        // Disparamos el evento personalizado cuando el contador llega al valor de noLook
         window.dispatchEvent(noLookEvent);
     }, noLook);
+}
+
+window.addEventListener('mousemove', (event) => {
+    eyeMouseFollow();
+    eyeDontLook();
 });
 
-// Escuchamos el evento personalizado
 window.addEventListener('noLook', () => {
-    console.log('El ratón ha estado inactivo durante ' + noLook + ' milisegundos');
+    innerCircle.setAttribute('cx', exCircle.getAttribute('cx'));
+    innerCircle.setAttribute('cy', exCircle.getAttribute('cy'));
 });
