@@ -107,3 +107,25 @@ window.addEventListener('mousemove', (event) => {
     }
 });
 
+let timer = null;
+const noLook = 5000; // Tiempo en milisegundos
+
+// Creamos el evento personalizado
+const noLookEvent = new Event('noLook');
+
+window.addEventListener('mousemove', () => {
+    // Reiniciamos el contador cada vez que se detecta un movimiento del ratón
+    if (timer !== null) {
+        clearTimeout(timer);
+    }
+
+    timer = setTimeout(() => {
+        // Disparamos el evento personalizado cuando el contador llega al valor de noLook
+        window.dispatchEvent(noLookEvent);
+    }, noLook);
+});
+
+// Escuchamos el evento personalizado
+window.addEventListener('noLook', () => {
+    console.log('El ratón ha estado inactivo durante ' + noLook + ' milisegundos');
+});
