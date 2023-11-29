@@ -6,6 +6,7 @@ const exCircle = document.querySelector('#exCircle');
 const eyeUp = document.querySelector('#up');
 const eyeGroup = document.querySelector('#eyeGroup');
 let stopBlink = false;
+let revealing = false;
 const charStepTime = 15;
 const charStepSize = 10;
 const svgViewBox = svgContainer.viewBox.baseVal;
@@ -40,6 +41,7 @@ blink();
 
 async function revealPassword(passwordInput, passwordValue) {
     let index = 1;
+    revealing = true;
 
     stopBlink = true;
     eyeGroup.setAttribute('mask', 'url(#eye-closed)');
@@ -56,6 +58,7 @@ async function revealPassword(passwordInput, passwordValue) {
         passwordInput.value = revealedValue;
         index++;
     }
+    revealing = false;
 }
 
 async function generateChar(index, revealedValue, passwordInput, passwordValue) {
@@ -77,6 +80,9 @@ function hidePassword(passwordInput) {
 }
 
 function togglePasswordVisibility() {
+    if(revealing)
+    return;
+
     const passwordInput = document.getElementById('password');
     const passwordValue = passwordInput.value;
 
@@ -87,27 +93,21 @@ function togglePasswordVisibility() {
     }
 }
 
-function eyeMouseFollow() {
-    if (eyeGroup.getAttribute('mask') == 'url(#eye-open)') {
-        const rect = svgContainer.getBoundingClientRect();
+function eyeMouseFollow(rect, mouseX, mouseY) {
 
-        const mouseX = (event.clientX - rect.left) * (svgViewBox.width / rect.width);
-        const mouseY = (event.clientY - rect.top) * (svgViewBox.height / rect.height);
+    const exCircleX = parseFloat(exCircle.getAttribute('cx'));
+    const exCircleY = parseFloat(exCircle.getAttribute('cy'));
 
-        const exCircleX = parseFloat(exCircle.getAttribute('cx'));
-        const exCircleY = parseFloat(exCircle.getAttribute('cy'));
+    const distanceX = mouseX - exCircleX;
+    const distanceY = mouseY - exCircleY;
 
-        const distanceX = mouseX - exCircleX;
-        const distanceY = mouseY - exCircleY;
+    const angle = Math.atan2(distanceY, distanceX);
 
-        const angle = Math.atan2(distanceY, distanceX);
+    const newX = exCircleX + radiusDiff * Math.cos(angle);
+    const newY = exCircleY + radiusDiff * Math.sin(angle);
 
-        const newX = exCircleX + radiusDiff * Math.cos(angle);
-        const newY = exCircleY + radiusDiff * Math.sin(angle);
-
-        innerCircle.setAttribute('cx', newX);
-        innerCircle.setAttribute('cy', newY);
-    }
+    innerCircle.setAttribute('cx', newX);
+    innerCircle.setAttribute('cy', newY);
 }
 
 function eyeDontLook() {
@@ -121,7 +121,13 @@ function eyeDontLook() {
 }
 
 window.addEventListener('mousemove', (event) => {
-    eyeMouseFollow();
+    if (eyeGroup.getAttribute('mask') == 'url(#eye-open)') {
+        const rect = svgContainer.getBoundingClientRect();
+        const mouseX = (event.clientX - rect.left) * (svgViewBox.width / rect.width);
+        const mouseY = (event.clientY - rect.top) * (svgViewBox.height / rect.height);
+
+        eyeMouseFollow(rect, mouseX, mouseY);
+    }
     eyeDontLook();
 });
 
